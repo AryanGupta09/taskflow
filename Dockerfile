@@ -19,10 +19,9 @@ RUN npm install --omit=dev
 # Copy backend source
 COPY backend/ ./
 
-# Copy frontend build INTO backend folder so path.join(__dirname, '../frontend/dist') works
+# Copy frontend build
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
-# Expose port
-EXPOSE 5000
+EXPOSE 8080
 
 CMD ["node", "server.js"]
