@@ -1,5 +1,5 @@
-// Load environment variables first
-require('dotenv').config();
+// Load .env file in development — in production (Railway/Docker) env vars are injected directly
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 
 const express = require('express');
 const cors = require('cors');
@@ -71,6 +71,10 @@ app.use(globalErrorHandler);
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
+
+// Debug: confirm env vars are loaded (remove after deploy works)
+console.log('🔍 ENV CHECK → NODE_ENV:', process.env.NODE_ENV);
+console.log('🔍 ENV CHECK → MONGODB_URI:', process.env.MONGODB_URI ? '✅ SET' : '❌ MISSING');
 
 const startServer = async () => {
   // Start HTTP server first so Railway healthcheck passes
