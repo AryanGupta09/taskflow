@@ -71,13 +71,20 @@ app.use(globalErrorHandler);
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
-  await connectDB();
-
-  const server = app.listen(PORT, () => {
+  // Start HTTP server first so Railway healthcheck passes
+  // even if DB connection takes a moment
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   });
 
-  // Handle unhandled promise rejections (e.g. DB query failures after startup)
+  // Connect to DB after server is listening
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('❌ DB connection failed:', err.message);
+    process.exit(1);
+  }
+
   process.on('unhandledRejection', (err) => {
     console.error('💥 UNHANDLED REJECTION! Shutting down...');
     console.error(err.name, err.message);
