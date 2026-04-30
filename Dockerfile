@@ -19,6 +19,9 @@ RUN npm install --omit=dev
 # Copy backend source
 COPY backend/ ./
 
+# Explicitly ensure .env is present
+COPY backend/.env .env
+
 # Copy frontend build
 COPY --from=frontend-build /app/frontend/dist /app/frontend/dist
 
