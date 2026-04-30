@@ -1,5 +1,5 @@
-// Load .env file in development — in production (Railway/Docker) env vars are injected directly
-require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+// Load .env file — works in both local and Docker (WORKDIR is /app/backend)
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
