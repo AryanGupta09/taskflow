@@ -51,10 +51,12 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 
 // ─── Serve Frontend (Production) ──────────────────────────────────────────────
-const frontendDist = path.join(__dirname, '../frontend/dist');
+// Works both locally (../frontend/dist) and in Docker (/app/frontend/dist)
+const frontendDist = process.env.FRONTEND_DIST_PATH
+  || path.join(__dirname, '../frontend/dist');
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(frontendDist));
-  // All non-API routes → React app (client-side routing)
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
     res.sendFile(path.join(frontendDist, 'index.html'));
